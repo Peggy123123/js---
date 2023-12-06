@@ -1,22 +1,3 @@
-// C3.js
-let chart = c3.generate({
-    bindto: '#chart', // HTML 元素綁定
-    data: {
-        type: "pie",
-        columns: [
-        ['Louvre 雙人床架', 1],
-        ['Antony 雙人床架', 2],
-        ['Anty 雙人床架', 3],
-        ['其他', 4],
-        ],
-        colors:{
-            "Louvre 雙人床架":"#DACBFF",
-            "Antony 雙人床架":"#9D7FEA",
-            "Anty 雙人床架": "#5434A7",
-            "其他": "#301E5F",
-        }
-    },
-});
 
 const token = `2yzObFLQ1MaJ960vgU0TFLfHDbA3`;
 const path = `peggy`;
@@ -34,7 +15,8 @@ function getOderData(){
     .then(function(res){
         orderData = res.data.orders;
         console.log(orderData);
-        renderOrderList()
+        renderOrderList();
+        getObjData();
     })
     .catch(function(error){
         console.log(error);
@@ -211,5 +193,50 @@ function changePaid(id,paid){
         .catch(function(error){
             console.log(error.response.data.message);
         })
-    }
+    };
+
+
+// C3.js
+let obj ={};
+function getObjData(){
+    orderData.forEach(item=>{
+        item.products.forEach(x=>{
+            if (obj[x.category] === undefined){
+                obj[x.category] = (x.price*x.quantity)
+            }else{
+                obj[x.category]+= (x.price*x.quantity)
+            }
+        });    
+    });
+    getArrData()
+    
+}
+let newData = [];
+function getArrData(){
+    let area = Object.keys(obj);
+    area.forEach(item=>{
+        let arr =[];
+        arr.push(item);
+        arr.push(obj[item]);
+        newData.push(arr)
+    });
+    renderChart()
+}
+
+//[[床架,$]、[收納,$]、[窗簾,$]] 丟這個格式進圖表
+function renderChart(){
+    let chart = c3.generate({
+        bindto: '#chart', // HTML 元素綁定
+        data: {
+            type: "pie",
+            columns: newData,
+            colors:{
+                "Louvre 雙人床架":"#DACBFF",
+                "Antony 雙人床架":"#9D7FEA",
+                "Anty 雙人床架": "#5434A7",
+                "其他": "#301E5F",
+            }
+        },
+    });
+}
 
