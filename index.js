@@ -5,8 +5,7 @@ const path = `peggy`;
 let productData = [];
 
 function getProductList() {
-  axiosxw
-    .get(`${url + path}/products`)
+  axios.get(`${url + path}/products`)
     .then(function (res) {
       productData = res.data.products;
       renderProduct();
