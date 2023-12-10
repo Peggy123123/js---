@@ -188,7 +188,6 @@ function changePaid(id,paid){
     })
         .then(function(res){
             getOderData();
-            
         })
         .catch(function(error){
             console.log(error.response.data.message);
@@ -197,8 +196,9 @@ function changePaid(id,paid){
 
 
 // C3.js
-let obj ={};
+
 function getObjData(){
+    let obj ={};
     orderData.forEach(item=>{
         item.products.forEach(x=>{
             if (obj[x.category] === undefined){
@@ -208,23 +208,21 @@ function getObjData(){
             }
         });    
     });
-    getArrData()
+    let newData = [];
+        let area = Object.keys(obj);
+        area.forEach(item=>{
+            let arr =[];
+            arr.push(item);
+            arr.push(obj[item]);
+            newData.push(arr)
+        });
+        renderChart(newData)
     
 }
-let newData = [];
-function getArrData(){
-    let area = Object.keys(obj);
-    area.forEach(item=>{
-        let arr =[];
-        arr.push(item);
-        arr.push(obj[item]);
-        newData.push(arr)
-    });
-    renderChart()
-}
+
 
 //[[床架,$]、[收納,$]、[窗簾,$]] 丟這個格式進圖表
-function renderChart(){
+function renderChart(newData){
     let chart = c3.generate({
         bindto: '#chart', // HTML 元素綁定
         data: {
